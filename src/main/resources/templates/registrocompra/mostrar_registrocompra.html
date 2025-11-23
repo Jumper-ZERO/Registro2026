@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>Listado de registro de compra</title>
+</head>
+
+<body>
+  <div>
+    <div class="container">
+      <h1>Listado de Registro de Compra</h1>
+
+      <form class="d-flex mb-3">
+        <input class="form-control me-2" type="search" name="search" placeholder="Buscar registro de compra..."
+          th:value="${textoBuscado}">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+
+        <a th:href="@{/registrocompra/mostrar}" class="btn btn-secondary ms-2">Cancelar</a>
+      </form>
+
+      <div class="col-12">
+        <a th:href="@{/registrocompra/registro}" class="btn btn-primary">Registrar Registro de Compra</a>
+        <a th:href="@{/registrocompra/habilita}" class="btn btn-warning">Habilitar Registro</a>
+        <a th:href="@{/mainmenu}" class="btn btn-dark">Atras</a>
+
+      </div>
+      <div class="mb-3"></div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered w-100">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Codigo</th>
+              <th scope="col">Fecha de Compra</th>
+              <th scope="col">Proveedor</th>
+              <th scope="col">Empleado</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Habilitar</th>
+              <th scope="col">Deshabilitar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="regcomp : ${listaregistrocompra}">
+              <th scope="row" th:text="${regcomp.codigo}"></th>
+              <td th:text="${regcomp.fechacompra}"></td>
+              <td th:text="${regcomp.proveedor.nombre}"></td>
+              <td th:text="${regcomp.empleado.nombre}"></td>
+              <td th:text="${regcomp.estado}"></td>
+              <td><a th:href="@{/registrocompra/actualiza/{id}(id=${regcomp.codigo})}"
+                  class="btn btn-success">Seleccionar</a></td>
+              <td><a th:href="@{/registrocompra/eliminar/{id}(id=${regcomp.codigo})}"
+                  class="btn btn-danger">Seleccionar</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+        <ul class="pagination">
+          <!-- Botón Previous -->
+          <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{?(page=${currentPage - 1}, search=${textoBuscado})}">Previous</a>
+          </li>
+
+          <!-- Botón Next -->
+          <li class="page-item" th:classappend="${currentPage == totalPages-1} ? 'disabled'">
+            <a class="page-link" th:href="@{?(page=${currentPage + 1}, search=${textoBuscado})}">Next</a>
+          </li>
+
+          <!-- Botones de páginas -->
+          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages-1)}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a class="page-link" th:href="@{?(page=${i},search=${textoBuscado})}" th:text="${i + 1}">1</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>

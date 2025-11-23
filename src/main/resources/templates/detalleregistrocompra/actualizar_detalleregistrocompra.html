@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Actualizar Detalle de Registro de Compra</title>
+  </head>
+
+  <body>
+    <div>
+      <div class="container">
+        <h1>Actualizar Detalle de Registro de Compra</h1>
+        <form th:action="@{/detalleregistrocompra/actualizar/{id}(id=${listadetalleregistrocompra.codigo})}"
+         method="post" th:object="${listadetalleregistrocompra}">
+
+          <div class="row">
+            <!--<div class="col-4">
+              <input type="hidden" class="form-control" id="txtCod" name="txtCod" 
+              th:field="*{codigo}" required>
+            </div>
+            -->
+            <div class="col-4">
+              <label for="txtCod" class="form-label">Codigo:</label>
+              <input type="text" class="form-control" id="txtCod" name="txtCod" 
+              th:field="*{codigo}" th:value="${listadetalleregistrocompra.codigo}" readonly>
+            </div>
+            <div class="col-4">
+              <label for="cboregistrocompra" class="form-label">Registro Compra:</label>
+              <select class="form-select" id="cboregistrocompra" name="cboregistrocompra" 
+              th:field="*{registrocompra}">
+                <option value="0" >Seleccione un registro de compra</option>
+                <option th:each="registrocompra: ${listaregistrocompra}" th:value="${registrocompra.codigo}" 
+                        th:text="${registrocompra.codigo}"></option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label for="cboproducto" class="form-label">Producto:</label>
+              <select class="form-select" id="cboproducto" name="cboproducto" 
+              th:field="*{producto}">
+                <option value="0" >Seleccione un producto</option>
+                <option th:each="producto: ${listaproducto}" th:value="${producto.codigo}" 
+                        th:text="${producto.nombre}"></option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <label for="txtCan" class="form-label">Cantidad:</label>
+              <input type="text" class="form-control" id="txtCan" name="txtCan" 
+              th:field="*{cantidad}" th:value="${listadetalleregistrocompra.cantidad}" readonly>
+            </div>
+            <div class="col-4">
+              <label for="txtPre" class="form-label">Precio:</label>
+              <input type="number" class="form-control" id="txtPre" name="txtPre" 
+              th:field="*{precio}" th:value="${listadetalleregistrocompra.precio}" readonly>
+            </div>
+        </div>
+
+            <div class="row mt-3">
+              <div class="col-12">
+                <button type="submit" class="btn btn-success">Actualizar</button>
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Actualizar Proveedor</title>
+  </head>
+
+  <body>
+    <div>
+      <div class="container">
+        <h1>Actualizar Proveedor</h1>
+        <form th:action="@{/proveedor/actualizar/{id}(id=${listaproveedor.codigo})}"
+         method="post" th:object="${listaproveedor}">
+
+          <div class="row">
+            <!--<div class="col-4">
+              <input type="hidden" class="form-control" id="txtCod" name="txtCod" 
+              th:field="*{codigo}" required>
+            </div>
+            -->
+            <div class="col-4">
+              <label for="txtCod" class="form-label">Codigo:</label>
+              <input type="text" class="form-control" id="txtCod" name="txtCod" 
+              th:field="*{codigo}" th:value="${listaproveedor.codigo}" readonly>
+            </div>
+            <div class="col-4">
+              <label for="txtNom" class="form-label">Nombre:</label>
+              <input type="text" class="form-control" id="txtNom" name="txtNom" 
+              th:field="*{nombre}" th:value="${listaproveedor.nombre}">
+            </div>
+            <div class="col-4">
+              <label for="txtRep" class="form-label">Representante:</label>
+              <input type="text" class="form-control" id="txtRep" name="txtRep"
+              th:field="*{representante}" th:value="${listaproveedor.representante}">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <label for="txtRuc" class="form-label">Ruc:</label>
+              <input type="text" class="form-control" id="txtRuc" name="txtRuc"
+              th:field="*{ruc}" th:value="${listaproveedor.ruc}">
+            </div>
+            <div class="col-4">
+              <label for="txtDir" class="form-label">Dirección:</label>
+              <input type="text" class="form-control" id="txtDir" name="txtDir"
+              th:field="*{direccion}" th:value="${listaproveedor.direccion}">
+            </div>
+            <div class="col-4">
+              <label for="txtTel" class="form-label">Telefono:</label>
+              <input type="text" class="form-control" id="txtTel" name="txtTel"
+              th:field="*{telefono}" th:value="${listaproveedor.telefono}">
+            </div>
+          </div>
+            
+                      
+          <div class="row">
+            <div class="col-4">
+              <label for="txtCel" class="form-label">Celular:</label>
+              <input type="text" class="form-control" id="txtCel" name="txtCel"
+              th:field="*{celular}" th:value="${listaproveedor.celular}">
+            </div>
+            <div class="col-4">
+              <label for="txtCor" class="form-label">Correo:</label>
+              <input type="text" class="form-control" id="txtCor" name="txtCor"
+              th:field="*{correo}" th:value="${listaproveedor.correo}">
+            </div>
+            <div class="col-4">
+              <label for="cbodistrito" class="form-label">Distrito:</label>
+              <select class="form-select" id="cbodistrito" name="cbodistrito" 
+              th:field="*{distrito}">
+                <option value="0" >Seleccione un distrito</option>
+                <option th:each="distrito: ${listadistrito}" th:value="${distrito.codigo}" 
+                        th:text="${distrito.nombre}"></option>
+              </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+              <label for="txtEst" class="form-label">Estado:</label>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="chkEst" name="chkEst" 
+                  th:field="*{estado}">
+                <label class="form-check-label" for="chkEst">Habilitado</label>
+              </div>
+          </div>
+
+            <div class="row mt-3">
+              <div class="col-12">
+                <button type="submit" class="btn btn-success">Actualizar</button>
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

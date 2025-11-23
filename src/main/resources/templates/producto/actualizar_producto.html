@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>Actualizar Producto</title>
+  </head>
+
+  <body>
+    <div>
+      <div class="container">
+        <h1>Actualizar Producto</h1>
+        <form th:action="@{/producto/actualizar/{id}(id=${listaproducto.codigo})}"
+         method="post" th:object="${listaproducto}">
+
+          <div class="row">
+            <!--<div class="col-4">
+              <input type="hidden" class="form-control" id="txtCod" name="txtCod" 
+              th:field="*{codigo}" required>
+            </div>
+            -->
+            <div class="col-4">
+              <label for="txtCod" class="form-label">Codigo:</label>
+              <input type="text" class="form-control" id="txtCod" name="txtCod" 
+              th:field="*{codigo}" th:value="${listaproducto.codigo}" readonly>
+            </div>
+            <div class="col-4">
+              <label for="txtNom" class="form-label">Nombre:</label>
+              <input type="text" class="form-control" id="txtNom" name="txtNom" 
+              th:field="*{nombre}" th:value="${listaproducto.nombre}">
+            </div>
+            <div class="col-4">
+              <label for="txtDes" class="form-label">Descipción:</label>
+              <input type="text" class="form-control" id="txtDes" name="txtDes"
+              th:field="*{descripcion}" th:value="${listaproducto.descripcion}">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-4">
+              <label for="txtApem" class="form-label">Precio:</label>
+              <input type="text" class="form-control" id="txtApem" name="txtApem"
+              th:field="*{precio}" th:value="${listaproducto.precio}">
+            </div>
+            <div class="col-4">
+              <label for="txtCant" class="form-label">Cantidad:</label>
+              <input type="number" class="form-control" id="txtCant" name="txtCant"
+              th:field="*{cantidad}" th:value="${listaproducto.cantidad}">
+            </div>
+            <div class="col-4">
+              <label for="txtFec" class="form-label">Fecha Ingreso:</label>
+              <input type="date" class="form-control" id="txtFec" name="txtFec"
+              th:field="*{fechaingreso}">
+            </div>
+          </div>
+            
+                      
+          <div class="row">
+            <div class="col-4">
+              <label for="cbomarca" class="form-label">Marca:</label>
+              <select class="form-select" id="cbomarca" name="cbomarca" 
+              th:field="*{marca}">
+                <option value="0" >Seleccione una marca</option>
+                <option th:each="marca: ${listamarca}" th:value="${marca.codigo}" 
+                        th:text="${marca.nombre}"></option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label for="cboCategoria" class="form-label">Categoria:</label>
+              <select class="form-select" id="cboCategoria" name="cboCategoria" 
+              th:field="*{categoria}">
+                <option value="0" >Seleccione una categoria</option>
+                <option th:each="categoria: ${listacategoria}" th:value="${categoria.codigo}" 
+                        th:text="${categoria.nombre}"></option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label for="txtEst" class="form-label">Estado:</label>
+              <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="chkEst" name="chkEst" 
+                  th:field="*{estado}">
+                <label class="form-check-label" for="chkEst">Habilitado</label>
+              </div>
+          </div>
+
+            <div class="row mt-3">
+              <div class="col-12">
+                <button type="submit" class="btn btn-success">Actualizar</button>
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>Listado de productos</title>
+</head>
+
+<body>
+  <div>
+    <div class="container">
+      <h1>Listado de Productos</h1>
+
+      <form class="d-flex mb-3">
+        <input class="form-control me-2" type="search" name="search" placeholder="Buscar producto..."
+          th:value="${textoBuscado}">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+
+        <a th:href="@{/producto/mostrar}" class="btn btn-secondary ms-2">Cancelar</a>
+      </form>
+
+      <div class="col-12">
+        <a th:href="@{/producto/registro}" class="btn btn-primary">Registrar Producto</a>
+        <a th:href="@{/producto/habilita}" class="btn btn-warning">Habilitar Registro</a>
+        <a th:href="@{/mainmenu}" class="btn btn-dark">Atras</a>
+
+      </div>
+      <div class="mb-3"></div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered w-100">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Codigo</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Descipcion</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Fecha de ingreso</th>
+              <th scope="col">Marca</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Habilitar</th>
+              <th scope="col">Deshabilitar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="pro : ${listaproducto}">
+              <th scope="row" th:text="${pro.codigo}"></th>
+              <td th:text="${pro.nombre}"></td>
+              <td th:text="${pro.descripcion}"></td>
+              <td th:text="${pro.precio}"></td>
+              <td th:text="${pro.cantidad}"></td>
+              <td th:text="${pro.fechaingreso}"></td>
+              <td th:text="${pro.marca.nombre}"></td>
+              <td th:text="${pro.categoria.nombre}"></td>
+              <td th:text="${pro.estado}? 'Habilitado':'Deshabilitado'"></td>
+              <td><a th:href="@{/producto/actualiza/{id}(id=${pro.codigo})}" class="btn btn-success">Seleccionar</a>
+              </td>
+              <td><a th:href="@{/producto/eliminar/{id}(id=${pro.codigo})}" class="btn btn-danger">Seleccionar</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+        <ul class="pagination">
+          <!-- Botón Previous -->
+          <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{?(page=${currentPage - 1}, search=${textoBuscado})}">Previous</a>
+          </li>
+
+          <!-- Botón Next -->
+          <li class="page-item" th:classappend="${currentPage == totalPages-1} ? 'disabled'">
+            <a class="page-link" th:href="@{?(page=${currentPage + 1}, search=${textoBuscado})}">Next</a>
+          </li>
+
+          <!-- Botones de páginas -->
+          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages-1)}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a class="page-link" th:href="@{?(page=${i},search=${textoBuscado})}" th:text="${i + 1}">1</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>

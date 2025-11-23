@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <title>Listado de proveedor</title>
+</head>
+
+<body>
+  <div>
+    <div class="container">
+      <h1>Listado de Proveedor</h1>
+
+      <form class="d-flex mb-3">
+        <input class="form-control me-2" type="search" name="search" placeholder="Buscar proveedor..."
+          th:value="${textoBuscado}">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+
+        <a th:href="@{/proveedor/mostrar}" class="btn btn-secondary ms-2">Cancelar</a>
+      </form>
+
+      <div class="col-12">
+        <a th:href="@{/proveedor/registro}" class="btn btn-primary">Registrar Proveedor</a>
+        <a th:href="@{/proveedor/habilita}" class="btn btn-warning">Habilitar Registro</a>
+        <a th:href="@{/mainmenu}" class="btn btn-dark">Atras</a>
+
+      </div>
+      <div class="mb-3"></div>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered w-100">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Codigo</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Representante</th>
+              <th scope="col">Ruc</th>
+              <th scope="col">Direccion</th>
+              <th scope="col">Telefono</th>
+              <th scope="col">Celular</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Distrito</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Habilitar</th>
+              <th scope="col">Deshabilitar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="prove : ${listaproveedor}">
+              <th scope="row" th:text="${prove.codigo}"></th>
+              <td th:text="${prove.nombre}"></td>
+              <td th:text="${prove.representante}"></td>
+              <td th:text="${prove.ruc}"></td>
+              <td th:text="${prove.direccion}"></td>
+              <td th:text="${prove.telefono}"></td>
+              <td th:text="${prove.celular}"></td>
+              <td th:text="${prove.correo}"></td>
+              <td th:text="${prove.distrito.nombre}"></td>
+              <td th:text="${prove.estado}? 'Habilitado':'Deshabilitado'"></td>
+              <td><a th:href="@{/proveedor/actualiza/{id}(id=${prove.codigo})}" class="btn btn-success">Seleccionar</a>
+              </td>
+              <td><a th:href="@{/proveedor/eliminar/{id}(id=${prove.codigo})}" class="btn btn-danger">Seleccionar</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <nav aria-label="Page navigation" th:if="${totalPages > 1}">
+        <ul class="pagination">
+          <!-- Botón Previous -->
+          <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{?(page=${currentPage - 1}, search=${textoBuscado})}">Previous</a>
+          </li>
+
+          <!-- Botón Next -->
+          <li class="page-item" th:classappend="${currentPage == totalPages-1} ? 'disabled'">
+            <a class="page-link" th:href="@{?(page=${currentPage + 1}, search=${textoBuscado})}">Next</a>
+          </li>
+
+          <!-- Botones de páginas -->
+          <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages-1)}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a class="page-link" th:href="@{?(page=${i},search=${textoBuscado})}" th:text="${i + 1}">1</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"></script>
+</body>
+
+</html>
