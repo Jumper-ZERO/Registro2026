@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.DetalleRegistroCompraEntity;
 import pe.com.registro2026.repository.DetalleRegistroCompraRepository;
 import pe.com.registro2026.service.DetalleRegistroCompraService;
@@ -25,9 +26,15 @@ public class DetalleRegistroCompraServiceImpl implements DetalleRegistroCompraSe
 	}
 
 	@Override
-	public Page<DetalleRegistroCompraEntity> findAllCustom(String search, int page, int size) {
+	public Page<DetalleRegistroCompraEntity> query(String search, int page, int size, RecordState recordState) {
+		Boolean state = switch (recordState) {
+			case ACTIVE -> true;
+			case INACTIVE -> false;
+			case ALL -> null;
+		};
+
 		Pageable pageable = PageRequest.of(page, size);
-		return repositorio.findAllCustom(search, pageable);
+		return repositorio.findAllCustom(pageable, search, state);
 	}
 
 	@Override

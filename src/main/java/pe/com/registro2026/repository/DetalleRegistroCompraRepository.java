@@ -18,5 +18,8 @@ public interface DetalleRegistroCompraRepository extends JpaRepository<DetalleRe
 			       OR LOWER(d.producto.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<DetalleRegistroCompraEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<DetalleRegistroCompraEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }
