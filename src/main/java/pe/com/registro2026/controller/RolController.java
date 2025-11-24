@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.RolEntity;
 import pe.com.registro2026.service.RolService;
 
@@ -26,7 +27,7 @@ public class RolController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search) {
-		Page<RolEntity> rolPage = servicio.findAllCustom(search, page, size);
+		Page<RolEntity> rolPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listarol", rolPage.getContent());
 		modelo.addAttribute("currentPage", rolPage.getNumber());
@@ -48,8 +49,18 @@ public class RolController {
 	}
 
 	@GetMapping("/rol/habilita")
-	public String MostrarHabilitarRol(Model modelo) {
-		modelo.addAttribute("listarol", servicio.findAll());
+	public String MostrarHabilitarRol(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search) {
+		Page<RolEntity> rolPage = servicio.query(search, page, size, RecordState.ACTIVE);
+
+		modelo.addAttribute("listarol", rolPage.getContent());
+		modelo.addAttribute("currentPage", rolPage.getNumber());
+		modelo.addAttribute("totalPages", rolPage.getTotalPages());
+		modelo.addAttribute("size", rolPage.getSize());
+		modelo.addAttribute("textoBuscado", search);
 		return "rol/habilitar_rol";
 	}
 

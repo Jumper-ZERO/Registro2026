@@ -9,16 +9,18 @@ import org.springframework.data.repository.query.Param;
 import pe.com.registro2026.entity.RolEntity;
 
 public interface RolRepository extends JpaRepository<RolEntity, Long>{
-	//agregamos un Query personalizado
 	@Query("""
 			SELECT r
 			FROM RolEntity r
-			WHERE r.estado = true
+			WHERE (:state IS NULL OR r.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
 			       OR LOWER(r.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<RolEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<RolEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }
