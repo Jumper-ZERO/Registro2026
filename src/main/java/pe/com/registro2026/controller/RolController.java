@@ -54,7 +54,7 @@ public class RolController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search) {
-		Page<RolEntity> rolPage = servicio.query(search, page, size, RecordState.ACTIVE);
+		Page<RolEntity> rolPage = servicio.query(search, page, size, RecordState.ALL);
 
 		modelo.addAttribute("listarol", rolPage.getContent());
 		modelo.addAttribute("currentPage", rolPage.getNumber());
