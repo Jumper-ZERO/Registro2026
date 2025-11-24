@@ -9,8 +9,6 @@ import pe.com.registro2026.RecordState;
 public interface SupportSimple<T> {
 	List<T> findAll();
 	Page<T> query(String search, int page, int size, RecordState state);
-	Page<T> getActives(String search, int page, int size);
-	Page<T> getAll(String search, int page, int size);
 	T findById(Long id);
 	T add(T id);
 	T update(Long id, T obj);
