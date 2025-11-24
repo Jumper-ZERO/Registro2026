@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.EmpleadoEntity;
 import pe.com.registro2026.service.DistritoService;
 import pe.com.registro2026.service.EmpleadoService;
@@ -43,7 +44,7 @@ public class EmpleadoController {
 			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "") String search
 	) {
-		Page<EmpleadoEntity> empleadoPage = servicio.findAllCustom(search, page, size);
+		Page<EmpleadoEntity> empleadoPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listaempleado", empleadoPage.getContent());
 		modelo.addAttribute("currentPage", empleadoPage.getNumber());
@@ -64,8 +65,19 @@ public class EmpleadoController {
 	}
 	
 	@GetMapping("/empleado/habilita")
-	public String MostrarHabilitarEmpleado(Model modelo) {
-		modelo.addAttribute("listaempleado",servicio.findAll());
+	public String MostrarHabilitarEmpleado(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "") String search
+	) {
+		Page<EmpleadoEntity> empleadoPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listaempleado", empleadoPage.getContent());
+		modelo.addAttribute("currentPage", empleadoPage.getNumber());
+		modelo.addAttribute("totalPages", empleadoPage.getTotalPages());
+		modelo.addAttribute("size", empleadoPage.getSize());
+	    modelo.addAttribute("textoBuscado", search);
 		
 		return "empleado/habilitar_empleado";
 	}

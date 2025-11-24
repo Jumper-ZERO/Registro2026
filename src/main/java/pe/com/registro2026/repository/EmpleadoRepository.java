@@ -13,7 +13,7 @@ public interface EmpleadoRepository extends JpaRepository<EmpleadoEntity, Long>{
 	@Query("""
 			SELECT e
 			FROM EmpleadoEntity e
-			WHERE e.estado = true
+			WHERE (:state IS NULL OR e.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
@@ -26,5 +26,8 @@ public interface EmpleadoRepository extends JpaRepository<EmpleadoEntity, Long>{
 			       OR LOWER(e.correo) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<EmpleadoEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<EmpleadoEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }
