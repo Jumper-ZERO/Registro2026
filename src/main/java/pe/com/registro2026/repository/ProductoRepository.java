@@ -12,7 +12,7 @@ public interface ProductoRepository extends JpaRepository<ProductoEntity, Long>{
 	@Query("""
 			SELECT p
 			FROM ProductoEntity p
-			WHERE p.estado = true
+			WHERE (:state IS NULL OR p.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
@@ -20,5 +20,8 @@ public interface ProductoRepository extends JpaRepository<ProductoEntity, Long>{
 			       OR LOWER(p.descripcion) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<ProductoEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<ProductoEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }

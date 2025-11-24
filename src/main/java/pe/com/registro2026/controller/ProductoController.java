@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.ProductoEntity;
 import pe.com.registro2026.service.CategoriaService;
 import pe.com.registro2026.service.MarcaService;
@@ -35,7 +36,7 @@ public class ProductoController {
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search
 	) {
-		Page<ProductoEntity> productoPage = servicio.findAllCustom(search, page, size);
+		Page<ProductoEntity> productoPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listaproducto", productoPage.getContent());
 		modelo.addAttribute("currentPage", productoPage.getNumber());
@@ -54,8 +55,19 @@ public class ProductoController {
 	}
 	
 	@GetMapping("/producto/habilita")
-	public String MostrarHabilitarProducto(Model modelo) {
-		modelo.addAttribute("listaproducto",servicio.findAll());
+	public String MostrarHabilitarProducto(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search
+	) {
+		Page<ProductoEntity> productoPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listaproducto", productoPage.getContent());
+		modelo.addAttribute("currentPage", productoPage.getNumber());
+		modelo.addAttribute("totalPages", productoPage.getTotalPages());
+		modelo.addAttribute("size", productoPage.getSize());
+	    modelo.addAttribute("textoBuscado", search);
 		
 		return "producto/habilitar_producto";
 	}
