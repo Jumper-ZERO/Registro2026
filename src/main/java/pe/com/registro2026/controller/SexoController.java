@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.SexoEntity;
 import pe.com.registro2026.service.SexoService;
 
@@ -28,14 +29,14 @@ public class SexoController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search) {
-		
-		Page<SexoEntity> sexoPage = servicio.findAllCustom(search, page, size);
+
+		Page<SexoEntity> sexoPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listasexo", sexoPage.getContent());
 		modelo.addAttribute("currentPage", sexoPage.getNumber());
 		modelo.addAttribute("totalPages", sexoPage.getTotalPages());
 		modelo.addAttribute("size", sexoPage.getSize());
-	    modelo.addAttribute("textoBuscado", search);
+		modelo.addAttribute("textoBuscado", search);
 		return "sexo/mostrar_sexo";
 	}
 
@@ -51,8 +52,19 @@ public class SexoController {
 	}
 
 	@GetMapping("/sexo/habilita")
-	public String MostrarHabilitarSexo(Model modelo) {
-		modelo.addAttribute("listasexo", servicio.findAll());
+	public String MostrarHabilitarSexo(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search) {
+
+		Page<SexoEntity> sexoPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listasexo", sexoPage.getContent());
+		modelo.addAttribute("currentPage", sexoPage.getNumber());
+		modelo.addAttribute("totalPages", sexoPage.getTotalPages());
+		modelo.addAttribute("size", sexoPage.getSize());
+		modelo.addAttribute("textoBuscado", search);
 		return "sexo/habilitar_sexo";
 	}
 

@@ -12,12 +12,15 @@ public interface SexoRepository extends JpaRepository<SexoEntity, Long> {
 	@Query("""
 			SELECT s
 			FROM SexoEntity s
-			WHERE s.estado = true
+			WHERE (:state IS NULL OR s.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
 			       OR LOWER(s.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<SexoEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<SexoEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }
