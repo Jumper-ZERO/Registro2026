@@ -12,7 +12,7 @@ public interface ProveedorRepository extends JpaRepository<ProveedorEntity, Long
 	@Query("""
 			SELECT p
 			FROM ProveedorEntity p
-			WHERE p.estado = true
+			WHERE (:state IS NULL OR p.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
@@ -25,5 +25,8 @@ public interface ProveedorRepository extends JpaRepository<ProveedorEntity, Long
 			       OR LOWER(p.correo) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<ProveedorEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<ProveedorEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }
