@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.DistritoEntity;
 import pe.com.registro2026.service.DistritoService;
 
@@ -31,7 +32,7 @@ public class DistritoController {
 			@RequestParam(defaultValue = "") String search
 		) {
 
-		Page<DistritoEntity> distritoPage = servicio.findAllCustom(search, page, size);
+		Page<DistritoEntity> distritoPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listadistrito", distritoPage.getContent());
 		modelo.addAttribute("currentPage", distritoPage.getNumber());
@@ -53,8 +54,19 @@ public class DistritoController {
 	}
 
 	@GetMapping("/distrito/habilita")
-	public String MostrarHabilitarDistrito(Model modelo) {
-		modelo.addAttribute("listadistrito", servicio.findAll());
+	public String MostrarHabilitarDistrito(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search
+	) {
+		Page<DistritoEntity> distritoPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listadistrito", distritoPage.getContent());
+		modelo.addAttribute("currentPage", distritoPage.getNumber());
+		modelo.addAttribute("totalPages", distritoPage.getTotalPages());
+		modelo.addAttribute("size", distritoPage.getSize());
+	    modelo.addAttribute("textoBuscado", search);
 		return "distrito/habilitar_distrito";
 	}
 

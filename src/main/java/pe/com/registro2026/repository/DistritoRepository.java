@@ -12,12 +12,15 @@ public interface DistritoRepository extends JpaRepository<DistritoEntity, Long> 
 	@Query("""
 			SELECT d
 			FROM DistritoEntity d
-			WHERE d.estado = true
+			WHERE (:state IS NULL OR d.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
 			       OR LOWER(d.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<DistritoEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<DistritoEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }
