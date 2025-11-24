@@ -12,12 +12,15 @@ public interface MarcaRepository extends JpaRepository<MarcaEntity, Long>{
 	@Query("""
 			SELECT m
 			FROM MarcaEntity m
-			WHERE m.estado = true
+			WHERE (:state IS NULL OR m.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
 			       OR LOWER(m.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<MarcaEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<MarcaEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }

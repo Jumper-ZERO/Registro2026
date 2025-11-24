@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.MarcaEntity;
 import pe.com.registro2026.service.MarcaService;
 
@@ -26,11 +27,10 @@ public class MarcaController {
 	@GetMapping("/marca/mostrar")
 	public String MostrarMarca(
 			Model modelo,
-
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search) {
-		Page<MarcaEntity> marcaPage = servicio.findAllCustom(search, page, size);
+		Page<MarcaEntity> marcaPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listamarca", marcaPage.getContent());
 		modelo.addAttribute("currentPage", marcaPage.getNumber());
@@ -52,8 +52,18 @@ public class MarcaController {
 	}
 
 	@GetMapping("/marca/habilita")
-	public String MostrarHabilitarMarca(Model modelo) {
-		modelo.addAttribute("listamarca", servicio.findAll());
+	public String MostrarHabilitarMarca(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search) {
+		Page<MarcaEntity> marcaPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listamarca", marcaPage.getContent());
+		modelo.addAttribute("currentPage", marcaPage.getNumber());
+		modelo.addAttribute("totalPages", marcaPage.getTotalPages());
+		modelo.addAttribute("size", marcaPage.getSize());
+		modelo.addAttribute("textoBuscado", search);
 		return "marca/habilitar_marca";
 	}
 
