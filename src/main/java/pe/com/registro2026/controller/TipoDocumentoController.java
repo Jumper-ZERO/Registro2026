@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.TipoDocumentoEntity;
 import pe.com.registro2026.service.TipoDocumentoService;
 
@@ -26,7 +27,7 @@ public class TipoDocumentoController {
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search) {
-		Page<TipoDocumentoEntity> tipoDocumentoPage = servicio.findAllCustom(search, page, size);
+		Page<TipoDocumentoEntity> tipoDocumentoPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listatipodocumento", tipoDocumentoPage.getContent());
 		modelo.addAttribute("currentPage", tipoDocumentoPage.getNumber());
@@ -48,8 +49,18 @@ public class TipoDocumentoController {
 	}
 
 	@GetMapping("/tipodocumento/habilita")
-	public String MostrarHabilitarListaDocumento(Model modelo) {
-		modelo.addAttribute("listatipodocumento", servicio.findAll());
+	public String MostrarHabilitarListaDocumento(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search) {
+		Page<TipoDocumentoEntity> tipoDocumentoPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listatipodocumento", tipoDocumentoPage.getContent());
+		modelo.addAttribute("currentPage", tipoDocumentoPage.getNumber());
+		modelo.addAttribute("totalPages", tipoDocumentoPage.getTotalPages());
+		modelo.addAttribute("size", tipoDocumentoPage.getSize());
+		modelo.addAttribute("textoBuscado", search);
 		return "tipodocumento/habilitar_tipodocumento";
 	}
 

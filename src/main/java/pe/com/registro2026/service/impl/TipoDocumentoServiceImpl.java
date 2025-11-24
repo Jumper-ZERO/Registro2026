@@ -6,8 +6,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.TipoDocumentoEntity;
 import pe.com.registro2026.repository.TipoDocumentoRepository;
 import pe.com.registro2026.service.TipoDocumentoService;
@@ -25,9 +27,15 @@ public class TipoDocumentoServiceImpl implements TipoDocumentoService {
 	}
 
 	@Override
-	public Page<TipoDocumentoEntity> findAllCustom(String search, int page, int size) {
-		PageRequest pageable = PageRequest.of(page, size);
-		return repositorio.findAllCustom(search, pageable);
+	public Page<TipoDocumentoEntity> query(String search, int page, int size, RecordState recordState) {
+		Boolean state = switch (recordState) {
+			case ACTIVE -> true;
+			case INACTIVE -> false;
+			case ALL -> null;
+		};
+
+		Pageable pageable = PageRequest.of(page, size);
+		return repositorio.findAllCustom(pageable, search, state);
 	}
 
 	@Override
