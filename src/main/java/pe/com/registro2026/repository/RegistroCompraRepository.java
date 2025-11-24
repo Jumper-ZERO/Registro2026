@@ -10,16 +10,19 @@ import pe.com.registro2026.entity.RegistroCompraEntity;
 
 public interface RegistroCompraRepository extends JpaRepository<RegistroCompraEntity, Long> {
 	@Query("""
-			SELECT d
-			FROM RegistroCompraEntity d
-			WHERE d.estado = true
+			SELECT r
+			FROM RegistroCompraEntity r
+			WHERE (:state IS NULL OR r.estado = :state)
 			  AND (
 				:search IS NULL
 				OR :search = ''
-				OR LOWER(CAST(d.codigo AS string)) LIKE LOWER(CONCAT('%', :search, '%'))
-				OR LOWER(d.proveedor.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
-				OR LOWER(d.empleado.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
+				OR LOWER(CAST(r.codigo AS string)) LIKE LOWER(CONCAT('%', :search, '%'))
+				OR LOWER(r.proveedor.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
+				OR LOWER(r.empleado.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<RegistroCompraEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<RegistroCompraEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }

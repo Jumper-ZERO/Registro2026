@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.RegistroCompraEntity;
 import pe.com.registro2026.service.EmpleadoService;
 import pe.com.registro2026.service.ProveedorService;
@@ -35,7 +36,7 @@ public class RegistroCompraController {
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search
 	) {
-		Page<RegistroCompraEntity> registrocompraPage = servicio.findAllCustom(search, page, size);
+		Page<RegistroCompraEntity> registrocompraPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listaregistrocompra", registrocompraPage.getContent());
 		modelo.addAttribute("currentPage", registrocompraPage.getNumber());
@@ -54,8 +55,19 @@ public class RegistroCompraController {
 	}
 	
 	@GetMapping("/registrocompra/habilita")
-	public String MostrarHabilitarRegistroCompra(Model modelo) {
-		modelo.addAttribute("listaregistrocompra", servicio.findAll());
+	public String MostrarHabilitarRegistroCompra(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search
+	) {
+		Page<RegistroCompraEntity> registrocompraPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listaregistrocompra", registrocompraPage.getContent());
+		modelo.addAttribute("currentPage", registrocompraPage.getNumber());
+		modelo.addAttribute("totalPages", registrocompraPage.getTotalPages());
+		modelo.addAttribute("size", registrocompraPage.getSize());
+	    modelo.addAttribute("textoBuscado", search);
 		
 		return "registrocompra/habilitar_registrocompra";
 	}
