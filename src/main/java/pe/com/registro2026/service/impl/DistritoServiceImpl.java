@@ -38,18 +38,6 @@ public class DistritoServiceImpl implements DistritoService {
 	}
 
 	@Override
-	public Page<DistritoEntity> getActives(String search, int page, int size) {
-		Pageable pageable = PageRequest.of(page, size);
-		return repositorio.findAllCustom(pageable, search, true);
-	}
-
-	@Override
-	public Page<DistritoEntity> getAll(String search, int page, int size) {
-		Pageable pageable = PageRequest.of(page, size);
-		return repositorio.findAllCustom(pageable, search, null);
-	}
-
-	@Override
 	public DistritoEntity findById(Long id) {
 		return repositorio.findById(id).get();
 	}
