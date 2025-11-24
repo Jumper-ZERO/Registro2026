@@ -8,16 +8,19 @@ import org.springframework.data.repository.query.Param;
 
 import pe.com.registro2026.entity.CategoriaEntity;
 
-public interface CategoriaRepository extends JpaRepository<CategoriaEntity, Long>{
+public interface CategoriaRepository extends JpaRepository<CategoriaEntity, Long> {
 	@Query("""
 			SELECT c
 			FROM CategoriaEntity c
-			WHERE c.estado = true
+			WHERE (:state IS NULL OR c.estado = :state)
 			  AND (
 			       :search IS NULL
 			       OR :search = ''
 			       OR LOWER(c.nombre) LIKE LOWER(CONCAT('%', :search, '%'))
 			  )
 			""")
-	Page<CategoriaEntity> findAllCustom(@Param("search") String search, Pageable pageable);
+	Page<CategoriaEntity> findAllCustom(
+			Pageable pageable,
+			@Param("search") String search,
+			@Param("state") Boolean state);
 }

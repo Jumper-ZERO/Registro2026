@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pe.com.registro2026.RecordState;
 import pe.com.registro2026.entity.CategoriaEntity;
 import pe.com.registro2026.service.CategoriaService;
 
@@ -26,12 +27,11 @@ public class CategoriaController {
 	@GetMapping("/categoria/mostrar")
 	public String MostrarCategoria(
 			Model modelo,
-
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size,
 			@RequestParam(defaultValue = "") String search) {
 
-		Page<CategoriaEntity> categoriaPage = servicio.findAllCustom(search, page, size);
+		Page<CategoriaEntity> categoriaPage = servicio.query(search, page, size, RecordState.ACTIVE);
 
 		modelo.addAttribute("listacategoria", categoriaPage.getContent());
 		modelo.addAttribute("currentPage", categoriaPage.getNumber());
@@ -53,8 +53,19 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/categoria/habilita")
-	public String MostrarHabilitarCategoria(Model modelo) {
-		modelo.addAttribute("listacategoria", servicio.findAll());
+	public String MostrarHabilitarCategoria(
+			Model modelo,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size,
+			@RequestParam(defaultValue = "") String search) {
+
+		Page<CategoriaEntity> categoriaPage = servicio.query(search, page, size, RecordState.ALL);
+
+		modelo.addAttribute("listacategoria", categoriaPage.getContent());
+		modelo.addAttribute("currentPage", categoriaPage.getNumber());
+		modelo.addAttribute("totalPages", categoriaPage.getTotalPages());
+		modelo.addAttribute("size", categoriaPage.getSize());
+		modelo.addAttribute("textoBuscado", search);
 		return "categoria/habilitar_categoria";
 	}
 
