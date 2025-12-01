@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Iniciar Sesión</title>
+</head>
+
+<body class="h-screen flex items-center justify-center bg-base-300">
+    <form th:action="@{/login}" method="post">
+        <p th:if="${error}" th:text="${error}" style="color:red"></p>
+        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+            <legend class="fieldset-legend">Login</legend>
+
+            <label class="label">Username</label>
+            <input id="username" name="username" type="username" class="input" placeholder="Username" required />
+
+            <label class="label">Password</label>
+            <input id="password" name="password" type="password" class="input" placeholder="Password" />
+
+            <button class="btn btn-neutral mt-4">Login</button>
+        </fieldset>
+    </form>
+</body>
+
+</html>

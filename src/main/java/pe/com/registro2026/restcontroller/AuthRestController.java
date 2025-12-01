@@ -1,89 +1,89 @@
-package pe.com.registro2026.controller;
+package pe.com.registro2026.restcontroller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import pe.com.registro2026.component.JwtUtil;
 import pe.com.registro2026.entity.UsuarioEntity;
 import pe.com.registro2026.repository.UsuarioRepository;
 import pe.com.registro2026.service.UsuarioService;
 
-@Controller
-public class AuthController {
-    @Autowired
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    private UsuarioService customUserDetailsService;
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+@RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
+public class AuthRestController {
+    private static final Logger log = LoggerFactory.getLogger(AuthRestController.class);
+
+    private final AuthenticationManager authenticationManager;
+    private final UsuarioService customUserDetailsService;
+    private final JwtUtil jwtUtil;
     @Autowired
     private UsuarioRepository usuarioRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/login")
-    public String loginView() {
-        return "login"; // login.html
-    }
-
+    // CÓDIGO CORREGIDO:
     @PostMapping("/login")
-    public String login(LoginRequest request, HttpServletResponse response, Model model) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         try {
             Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    request.getUsername(), request.getPassword());
+                    request.getUsername(),
+                    request.getPassword()
+            );
 
             authenticationManager.authenticate(authentication);
 
             final UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getUsername());
-            System.out.println("UserDetails: " + userDetails.getUsername());
             final String jwt = jwtUtil.generateToken(userDetails);
 
             ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
                     .httpOnly(true)
                     .path("/")
-                    .maxAge(24 * 60 * 60)
+                    .maxAge(24 * 60 * 60) // 1 día
                     .build();
-            response.addHeader("Set-Cookie", cookie.toString());
 
-            return "redirect:/mainmenu"; // redirección al home
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(new LoginResponse(jwt));
+
         } catch (Exception e) {
-            model.addAttribute("error", "Usuario o contraseña incorrectos");
-            return "login";
+            // Capturará BadCredentialsException o UsernameNotFoundException
+            log.error("Fallo de autenticación para " + request.getUsername() + ": " + e.getMessage());
+            return ResponseEntity.status(401).body("Usuario o contraseña incorrectos");
         }
     }
 
-    @GetMapping("/register")
-    public String registerForm() {
-        return "register"; // muestra register.html
-    }
-
     @PostMapping("/register")
-    public String register(RegisterRequest request, Model model) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         if (usuarioRepository.findByUsername(request.getUsername()).isPresent()) {
-            model.addAttribute("error", "El usuario ya existe");
-            return "register";
+            return ResponseEntity.badRequest().body("El usuario ya existe");
         }
 
         UsuarioEntity nuevoUsuario = UsuarioEntity.builder()
                 .username(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role("USER")
+                .password(passwordEncoder.encode(request.getPassword())) // encriptar con BCrypt
+                .role("USER") // por defecto usuario normal
                 .build();
+
         usuarioRepository.save(nuevoUsuario);
 
-        return "redirect:/login";
+        return ResponseEntity.ok("Usuario registrado correctamente");
     }
 }
 
